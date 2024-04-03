@@ -133,8 +133,7 @@
     - name: Set PAM's Password Hashing Algorithm - Create an authselect custom profile
         based on the current profile
       ansible.builtin.command:
-        cmd: authselect create-profile hardening -b {{ authselect_current_profile
-          }}
+        cmd: authselect create-profile hardening -b {{ authselect_current_profile}}
       when:
       - result_authselect_check_cmd is success
       - authselect_current_profile is not match("custom/")
@@ -182,8 +181,7 @@
     - name: Set PAM's Password Hashing Algorithm - Change the PAM file to be edited
         according to the custom authselect profile
       ansible.builtin.set_fact:
-        pam_file_path: /etc/authselect/{{ authselect_custom_profile }}/{{ pam_file_path
-          | basename }}
+        pam_file_path: /etc/authselect/{{ authselect_custom_profile }}/{{ pam_file_path | basename }}
     when:
     - result_authselect_present.stat.exists
 
@@ -228,8 +226,7 @@
         line: password    sufficient    pam_unix.so
       register: result_pam_module_add
       when:
-      - result_pam_line_other_control_present.found == 0 or result_pam_line_other_control_present.found
-        > 1
+      - result_pam_line_other_control_present.found == 0 or result_pam_line_other_control_present.found > 1
 
     - name: Set PAM's Password Hashing Algorithm - Ensure authselect changes are applied
       ansible.builtin.command:
@@ -568,7 +565,7 @@
     dest: /etc/security/pwquality.conf
     regexp: ^#?\s*ucredit
     line: ucredit = {{ var_password_pam_ucredit }}
-  when: '"libpam-runtime" in ansible_facts.packages'
+  when: '"pam" in ansible_facts.packages'
   tags:
   - DISA-STIG-UBTU-20-010050
   - NIST-800-53-CM-6(a)
